@@ -1,0 +1,86 @@
+package pe.com.mallgp.backend.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pe.com.mallgp.backend.entities.New;
+import pe.com.mallgp.backend.repositories.NewRepository;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
+public class NewController {
+    @Autowired
+    private NewRepository newRepository;
+
+    @GetMapping("/news")
+    public ResponseEntity<List<New>> getAllNews(){
+        List<New> news;
+        news=newRepository.findAll();
+        for(New n:news){
+            n.setMall(null);
+        }
+        return new ResponseEntity<List<New>>(news, HttpStatus.OK);
+    }
+
+    @GetMapping("/news_date_on")
+    public ResponseEntity<List<New>> getAllNewsAndDateOn(){
+        List<New> news;
+        news=newRepository.findAll();
+        for(New n:news){
+            n.setDate_on(null);
+        }
+        return new ResponseEntity<List<New>>(news, HttpStatus.OK);
+    }
+
+    @GetMapping("/news_date_off")
+    public ResponseEntity<List<New>> getAllNewsAndDateOff(){
+        List<New> news;
+        news=newRepository.findAll();
+        for(New n:news){
+            n.setDate_of(null);
+        }
+        return new ResponseEntity<List<New>>(news, HttpStatus.OK);
+    }
+
+    @GetMapping("/news_mall")
+    public ResponseEntity<List<New>> getAllNewsAndMall(){
+        List<New> news;
+        news=newRepository.findAll();
+        for(New n:news){
+            n.setMall(null);
+        }
+        return new ResponseEntity<List<New>>(news, HttpStatus.OK);
+    }
+
+    @PostMapping("/news")
+    public ResponseEntity<New> createNew(@RequestBody New news){
+        New newNew = newRepository.save(new New(news.getText(),news.getDate_on(),news.getDate_of(),news.getMall()));
+        return new ResponseEntity<New>(newNew, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/news/{id}")
+    public ResponseEntity<New>getNewById(@PathVariable("id") Long id){
+        New news=newRepository.findById(id).get();
+        news.setMall(null);
+        return new ResponseEntity<New>(news,HttpStatus.OK);
+    }
+
+    @PutMapping("/news/{id}")
+    public ResponseEntity<New> updateNew(@PathVariable("id") Long id, @RequestBody New news){
+        New foundNew=newRepository.findById(id).get();
+        if(news.getText()!=null)
+        foundNew.setText(news.getText());
+        if(news.getDate_on()!=null)
+        foundNew.setDate_on(news.getDate_on());
+        if(news.getDate_of()!=null)
+        foundNew.setDate_of(news.getDate_of());
+        if(news.getMall()!=null)
+        foundNew.setMall(news.getMall());
+        New updateNew=newRepository.save(foundNew);
+        updateNew.setMall(null);
+        return new ResponseEntity<New>(updateNew,HttpStatus.OK);
+    }
+}
