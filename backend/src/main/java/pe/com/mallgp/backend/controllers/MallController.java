@@ -7,7 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.*;
-import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.AdminRepository;
 import pe.com.mallgp.backend.repositories.MallRepository;
 import pe.com.mallgp.backend.repositories.NewRepository;
@@ -60,6 +62,7 @@ public class MallController {
         }
         return new ResponseEntity<List<Mall>>(malls, HttpStatus.OK);
     }
+
     //http://localhost:8080/api/malls
     @PostMapping("/malls")
     public ResponseEntity<Mall> createMall(@RequestBody Mall mall){
@@ -126,5 +129,26 @@ public class MallController {
         return new ResponseEntity<Mall>(updateMall,HttpStatus.OK);
     }
 
+    // http://localhost:8080/api/malls/1
+    @DeleteMapping("/malls/{id}")
+    public ResponseEntity<HttpStatus>deleteMallById(@PathVariable("id")Long id){
+        mallRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // http://localhost:8080/api/malls/4/forced/1
+    @DeleteMapping("/malls/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteMallByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            Mall foundOwner = mallRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found Mall with id="+id));
+            for (New n: foundOwner.getNews()) {
+                newRepository.deleteById(n.getId());
+            }
+        }
+        mallRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

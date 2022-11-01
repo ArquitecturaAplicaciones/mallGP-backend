@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
-import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.OfferRepository;
 
 import java.util.List;
@@ -56,6 +58,15 @@ public class OfferController {
         }
         offerRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @GetMapping("/offers/{id}")
+    public ResponseEntity<Offer> getOfferById(@PathVariable("id") Long id){
+        Offer offer=offerRepository.findById(id).get();
+        offer.setStore(null);
+        offer.setProduct(null);
+        return new ResponseEntity<Offer>(offer, HttpStatus.OK);
     }
 
     @PutMapping("/offers/{id}")

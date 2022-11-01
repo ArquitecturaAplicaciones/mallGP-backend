@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Mall;
-import pe.com.mallgp.backend.entities.New;
+
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
-import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.repositories.ProductRepository;
 
@@ -60,6 +60,15 @@ public class ProductController {
         }
         productRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
+        Product product=productRepository.findById(id).get();
+        product.setOffers(null);
+        return new ResponseEntity<Product>(product,HttpStatus.OK);
+
     }
 
     @PutMapping("/products/{id}")

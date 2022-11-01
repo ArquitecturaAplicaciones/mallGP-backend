@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Mall;
 import pe.com.mallgp.backend.entities.New;
-import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+
+
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.NewRepository;
 
 import java.util.List;
@@ -72,6 +75,28 @@ public class NewController {
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    // http://localhost:8080/api/news/4/forced/1
+    @DeleteMapping("/news/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteNewByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            New foundOwner = newRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found New with id="+id));
+
+        }
+        newRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/news/{id}")
+    public ResponseEntity<New>getNewById(@PathVariable("id") Long id){
+        New news=newRepository.findById(id).get();
+        news.setMall(null);
+        return new ResponseEntity<New>(news,HttpStatus.OK);
+
     }
 
     // http://localhost:8080/api/news/4/forced/1

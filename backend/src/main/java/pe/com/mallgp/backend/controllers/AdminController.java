@@ -9,7 +9,9 @@ import pe.com.mallgp.backend.entities.Admin;
 
 import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.entities.Product;
-import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.AdminRepository;
 
 import java.util.List;
@@ -37,6 +39,7 @@ public class AdminController {
     }
 
     // http://localhost:8080/api/admins/4/forced/1
+
     @DeleteMapping("/admins/{id}/forced/{forced}")
     public ResponseEntity<HttpStatus> deleteAdminByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
 
@@ -47,6 +50,14 @@ public class AdminController {
         }
         adminRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+    @GetMapping("/admins/{id}")
+    public ResponseEntity<Admin> getAdminById(@PathVariable("id") Long id){
+        Admin admin=adminRepository.findById(id).get();
+        admin.setStoreMall(null);
+        return new ResponseEntity<Admin>(admin,HttpStatus.OK);
     }
 
     @PutMapping("/admins/{id}")

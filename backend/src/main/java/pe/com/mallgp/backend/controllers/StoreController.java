@@ -5,7 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.*;
-import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.repositories.StoreRepository;
 
@@ -69,6 +71,16 @@ public class StoreController {
         }
         storeRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+
+
+    @GetMapping("/stores/{id}")
+    public ResponseEntity<Store> getStoreById(@PathVariable("id")Long id){
+        Store store=storeRepository.findById(id).get();
+        store.setOffers(null);
+        return new ResponseEntity<Store>(store,HttpStatus.OK);
+
     }
 
     @PutMapping("/stores/{id}")
