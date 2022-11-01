@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
+
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.OfferRepository;
 
 import java.util.List;
@@ -34,6 +37,7 @@ public class OfferController {
         return new ResponseEntity<Offer>(newOffer, HttpStatus.CREATED);
     }
 
+
     // http://localhost:8080/api/offers/1
     @DeleteMapping("/offers/{id}")
     public ResponseEntity<HttpStatus>deleteOfferById(@PathVariable("id")Long id){
@@ -54,6 +58,7 @@ public class OfferController {
         }
         offerRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
     @GetMapping("/offers/{id}")
@@ -68,15 +73,15 @@ public class OfferController {
     public ResponseEntity<Offer> updateOffer(@PathVariable("id")Long id, @RequestBody Offer offer){
         Offer foundOffer=offerRepository.findById(id).get();
         if(offer.getName()!=null)
-        foundOffer.setName(offer.getName());
+            foundOffer.setName(offer.getName());
         if(offer.getDate_on()!=null)
-        foundOffer.setDate_on(offer.getDate_on());
+            foundOffer.setDate_on(offer.getDate_on());
         if(offer.getDate_of()!=null)
-        foundOffer.setDate_of(offer.getDate_of());
+            foundOffer.setDate_of(offer.getDate_of());
         if(offer.getStore()!=null)
-        foundOffer.setStore(offer.getStore());
+            foundOffer.setStore(offer.getStore());
         if(offer.getProduct()!=null)
-        foundOffer.setProduct(offer.getProduct());
+            foundOffer.setProduct(offer.getProduct());
         Offer updateOffer=offerRepository.save(foundOffer);
         updateOffer.setStore(null);
         updateOffer.setProduct(null);

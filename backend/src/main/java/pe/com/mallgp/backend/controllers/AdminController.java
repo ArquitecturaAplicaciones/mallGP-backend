@@ -7,8 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Admin;
 
+import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.entities.Product;
+
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.AdminRepository;
 
 import java.util.List;
@@ -35,6 +38,8 @@ public class AdminController {
         return new ResponseEntity<Admin>(newAdmin, HttpStatus.CREATED);
     }
 
+    // http://localhost:8080/api/admins/4/forced/1
+
     @DeleteMapping("/admins/{id}/forced/{forced}")
     public ResponseEntity<HttpStatus> deleteAdminByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
 
@@ -45,6 +50,7 @@ public class AdminController {
         }
         adminRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
     @GetMapping("/admins/{id}")
@@ -58,12 +64,11 @@ public class AdminController {
     public ResponseEntity<Admin> updateAdmin(@PathVariable("id") Long id, @RequestBody Admin admin){
         Admin foundAdmin =adminRepository.findById(id).get();
         if(admin.getName()!=null)
-        foundAdmin.setName(admin.getName());
+            foundAdmin.setName(admin.getName());
         if(admin.getPassword()!=null)
-        foundAdmin.setPassword(admin.getPassword());
+            foundAdmin.setPassword(admin.getPassword());
         Admin updateAdmin = adminRepository.save(foundAdmin);
         updateAdmin.setStoreMall(null);
         return new ResponseEntity<Admin>(updateAdmin, HttpStatus.OK);
     }
-
 }

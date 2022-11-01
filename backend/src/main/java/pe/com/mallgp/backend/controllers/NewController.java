@@ -1,11 +1,16 @@
 package pe.com.mallgp.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pe.com.mallgp.backend.entities.Mall;
 import pe.com.mallgp.backend.entities.New;
+
+
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+
 import pe.com.mallgp.backend.repositories.NewRepository;
 
 import java.util.List;
@@ -62,6 +67,7 @@ public class NewController {
         return new ResponseEntity<New>(newNew, HttpStatus.CREATED);
     }
 
+
     // http://localhost:8080/api/news/1
     @DeleteMapping("/news/{id}")
     public ResponseEntity<HttpStatus>deleteNewById(@PathVariable("id")Long id){
@@ -69,6 +75,7 @@ public class NewController {
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
     // http://localhost:8080/api/news/4/forced/1
@@ -89,21 +96,38 @@ public class NewController {
         New news=newRepository.findById(id).get();
         news.setMall(null);
         return new ResponseEntity<New>(news,HttpStatus.OK);
+
     }
+
+    // http://localhost:8080/api/news/4/forced/1
+    @DeleteMapping("/news/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteNewByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            New foundOwner = newRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found New with id="+id));
+
+        }
+        newRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
     @PutMapping("/news/{id}")
     public ResponseEntity<New> updateNew(@PathVariable("id") Long id, @RequestBody New news){
         New foundNew=newRepository.findById(id).get();
         if(news.getText()!=null)
-        foundNew.setText(news.getText());
+            foundNew.setText(news.getText());
         if(news.getDate_on()!=null)
-        foundNew.setDate_on(news.getDate_on());
+            foundNew.setDate_on(news.getDate_on());
         if(news.getDate_of()!=null)
-        foundNew.setDate_of(news.getDate_of());
+            foundNew.setDate_of(news.getDate_of());
         if(news.getMall()!=null)
-        foundNew.setMall(news.getMall());
+            foundNew.setMall(news.getMall());
         New updateNew=newRepository.save(foundNew);
         updateNew.setMall(null);
         return new ResponseEntity<New>(updateNew,HttpStatus.OK);
     }
+
+
 }
