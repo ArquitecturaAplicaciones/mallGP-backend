@@ -5,7 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Mall;
+import pe.com.mallgp.backend.entities.New;
+import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
+import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
+import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.repositories.ProductRepository;
 
 import java.util.List;
@@ -16,6 +20,9 @@ public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private OfferRepository offerRepository;
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>>getAllProducts(){
@@ -33,11 +40,26 @@ public class ProductController {
         return new ResponseEntity<Product>(newProduct, HttpStatus.CREATED);
     }
 
-    @GetMapping("/products/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
-        Product product=productRepository.findById(id).get();
-        product.setOffers(null);
-        return new ResponseEntity<Product>(product,HttpStatus.OK);
+    // http://localhost:8080/api/products/1
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<HttpStatus>deleteProductById(@PathVariable("id")Long id){
+        productRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // http://localhost:8080/api/products/4/forced/1
+    @DeleteMapping("/products/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteProductByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            Product foundOwner = productRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found Product with id="+id));
+            for (Offer offer: foundOwner.getOffers()) {
+                offerRepository.deleteById(offer.getId());
+            }
+        }
+        productRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/products/{id}")

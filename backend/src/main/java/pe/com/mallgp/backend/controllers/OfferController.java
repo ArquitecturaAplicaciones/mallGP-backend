@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
+import pe.com.mallgp.backend.excepctions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.OfferRepository;
 
 import java.util.List;
@@ -33,27 +35,42 @@ public class OfferController {
         return new ResponseEntity<Offer>(newOffer, HttpStatus.CREATED);
     }
 
-    @GetMapping("/offers/{id}")
-    public ResponseEntity<Offer> getOfferById(@PathVariable("id") Long id){
-        Offer offer=offerRepository.findById(id).get();
-        offer.setStore(null);
-        offer.setProduct(null);
-        return new ResponseEntity<Offer>(offer, HttpStatus.OK);
+
+    // http://localhost:8080/api/offers/1
+    @DeleteMapping("/offers/{id}")
+    public ResponseEntity<HttpStatus>deleteOfferById(@PathVariable("id")Long id){
+        offerRepository.deleteById(id);
+
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // http://localhost:8080/api/offers/4/forced/1
+    @DeleteMapping("/offers/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteOfferByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            Offer foundOwner = offerRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found Offer with id="+id));
+
+        }
+        offerRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/offers/{id}")
     public ResponseEntity<Offer> updateOffer(@PathVariable("id")Long id, @RequestBody Offer offer){
         Offer foundOffer=offerRepository.findById(id).get();
         if(offer.getName()!=null)
-        foundOffer.setName(offer.getName());
+            foundOffer.setName(offer.getName());
         if(offer.getDate_on()!=null)
-        foundOffer.setDate_on(offer.getDate_on());
+            foundOffer.setDate_on(offer.getDate_on());
         if(offer.getDate_of()!=null)
-        foundOffer.setDate_of(offer.getDate_of());
+            foundOffer.setDate_of(offer.getDate_of());
         if(offer.getStore()!=null)
-        foundOffer.setStore(offer.getStore());
+            foundOffer.setStore(offer.getStore());
         if(offer.getProduct()!=null)
-        foundOffer.setProduct(offer.getProduct());
+            foundOffer.setProduct(offer.getProduct());
         Offer updateOffer=offerRepository.save(foundOffer);
         updateOffer.setStore(null);
         updateOffer.setProduct(null);
