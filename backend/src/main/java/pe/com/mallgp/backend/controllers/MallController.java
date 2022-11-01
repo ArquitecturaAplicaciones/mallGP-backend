@@ -6,8 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.*;
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.AdminRepository;
 import pe.com.mallgp.backend.repositories.MallRepository;
+import pe.com.mallgp.backend.repositories.NewRepository;
+import pe.com.mallgp.backend.repositories.StoreRepository;
 
 import java.util.List;
 
@@ -16,6 +19,12 @@ import java.util.List;
 public class MallController {
     @Autowired
     private MallRepository mallRepository;
+
+    @Autowired
+    private NewRepository newRepository;
+
+    @Autowired
+    private StoreRepository storeRepository;
 
     @GetMapping("/malls")
     public ResponseEntity<List<Mall>>getAllMall(){
@@ -52,7 +61,7 @@ public class MallController {
     }
 
 
-
+    //http://localhost:8080/api/malls
     @PostMapping("/malls")
     public ResponseEntity<Mall> createMall(@RequestBody Mall mall){
         Mall newMall = mallRepository.save(new Mall(mall.getName(),mall.getLocation()));
@@ -76,5 +85,27 @@ public class MallController {
         Mall updateMall=mallRepository.save(foundMall);
         updateMall.setNews(null);
         return new ResponseEntity<Mall>(updateMall,HttpStatus.OK);
+    }
+
+    // http://localhost:8080/api/malls/1
+    @DeleteMapping("/malls/{id}")
+    public ResponseEntity<HttpStatus>deleteMallById(@PathVariable("id")Long id){
+        mallRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // http://localhost:8080/api/malls/4/forced/1
+    @DeleteMapping("/malls/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteMallByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            Mall foundOwner = mallRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found Mall with id="+id));
+            for (New n: foundOwner.getNews()) {
+                newRepository.deleteById(n.getId());
+            }
+        }
+        mallRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.OfferRepository;
 
 import java.util.List;
@@ -31,6 +32,28 @@ public class OfferController {
     public ResponseEntity<Offer> createOffer(@RequestBody Offer offer){
         Offer newOffer = offerRepository.save(new Offer(offer.getName(),offer.getDate_on(),offer.getDate_of(),offer.getStore(),offer.getProduct()));
         return new ResponseEntity<Offer>(newOffer, HttpStatus.CREATED);
+    }
+
+    // http://localhost:8080/api/offers/1
+    @DeleteMapping("/offers/{id}")
+    public ResponseEntity<HttpStatus>deleteOfferById(@PathVariable("id")Long id){
+        offerRepository.deleteById(id);
+
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // http://localhost:8080/api/offers/4/forced/1
+    @DeleteMapping("/offers/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteOfferByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            Offer foundOwner = offerRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found Offer with id="+id));
+
+        }
+        offerRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/offers/{id}")

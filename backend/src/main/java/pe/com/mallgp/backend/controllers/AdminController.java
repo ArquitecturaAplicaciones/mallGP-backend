@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Admin;
 
 import pe.com.mallgp.backend.entities.Product;
+import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.AdminRepository;
 
 import java.util.List;
@@ -32,6 +33,18 @@ public class AdminController {
     public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin){
         Admin newAdmin = adminRepository.save(new Admin(admin.getName(),admin.getPassword()));
         return new ResponseEntity<Admin>(newAdmin, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/admins/{id}/forced/{forced}")
+    public ResponseEntity<HttpStatus> deleteAdminByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
+
+        if (forced==1) {
+            Admin foundOwner = adminRepository.findById(id).
+                    orElseThrow(()->new ResourceNotFoundException("Not found New with id="+id));
+
+        }
+        adminRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/admins/{id}")
