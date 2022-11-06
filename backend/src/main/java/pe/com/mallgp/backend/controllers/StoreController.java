@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.*;
-
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
-
 import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.repositories.StoreRepository;
 
@@ -29,6 +27,8 @@ public class StoreController {
         stores=storeRepository.findAll();
         for (Store s:stores){
             s.setOffers(null);
+            s.setProductStores(null);
+            s.setStoreMalls(null);
         }
         return new ResponseEntity<List<Store>>(stores, HttpStatus.OK);
     }
@@ -45,11 +45,14 @@ public class StoreController {
         return new ResponseEntity<List<Store>>(stores, HttpStatus.OK);
     }
 
+
+
     @PostMapping("/stores")
     public ResponseEntity<Store> createStore(@RequestBody Store store){
         Store newStore = storeRepository.save(new Store(store.getName(),store.getCategory()));
         return new ResponseEntity<Store>(newStore, HttpStatus.CREATED);
     }
+
 
     // http://localhost:8080/api/products/1
     @DeleteMapping("/stores/{id}")
@@ -71,28 +74,44 @@ public class StoreController {
         }
         storeRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
 
     @GetMapping("/stores/{id}")
-    public ResponseEntity<Store> getStoreById(@PathVariable("id")Long id){
+    public ResponseEntity<Store> getStoreById(@PathVariable("id") Long id){
         Store store=storeRepository.findById(id).get();
-        store.setOffers(null);
+        store.setStoreMalls(null);
         return new ResponseEntity<Store>(store,HttpStatus.OK);
+    }
+
+
+
+    @GetMapping("/stores/category/{category}")
+    public ResponseEntity<List<Store>> getStoreByCategory(@PathVariable("category")String category){
+
+        List<Store>stores;
+        stores=storeRepository.findByCategory("category");
+        for (Store s:stores){
+            s.setOffers(null);
+            s.setProductStores(null);
+            s.setStoreMalls(null);
+        }
+        return new ResponseEntity<List<Store>>(stores,HttpStatus.OK);
 
     }
+
+
+
 
     @PutMapping("/stores/{id}")
     public ResponseEntity<Store>updateStore(@PathVariable("id") Long id, @RequestBody Store store){
         Store foundStore=storeRepository.findById(id).get();
         if(store.getName()!=null)
-            foundStore.setName(store.getName());
+        foundStore.setName(store.getName());
         if(store.getCategory()!=null)
-            foundStore.setCategory(store.getCategory());
+        foundStore.setCategory(store.getCategory());
         Store updateStore=storeRepository.save(foundStore);
         updateStore.setOffers(null);
         return new ResponseEntity<Store>(updateStore, HttpStatus.OK);
     }
-
 }

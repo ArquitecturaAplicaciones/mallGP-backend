@@ -21,7 +21,8 @@ public class BackendApplication {
 		NewRepository newRepository,
 		OfferRepository offerRepository,
 		ProductRepository productRepository,
-		StoreRepository storeRepository
+		StoreRepository storeRepository,
+		ProductStoreRepository productStoreRepository
 		){
 		return args->{
 			//admins
@@ -70,6 +71,11 @@ public class BackendApplication {
 
 			Store store2=new Store("Electra","Tecnologia");
 			storeRepository.save(store2);
+
+			//ProductStore
+			ProductStore productStore1=new ProductStore(product,store,12.0,"19-11-2022");
+			productStoreRepository.save(productStore1);
+
 
 			//offers
 			offerRepository.save(new Offer("Oferta 1","19-11-2022","19-11-2022",store,product));

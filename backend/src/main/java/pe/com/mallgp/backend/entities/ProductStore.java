@@ -26,6 +26,15 @@ public class ProductStore {
 
     private Double price;
 
-    private Time restock;
+
+    private String restock;
+
+
+    public ProductStore(Product product, Store store, Double price, String restock) {
+        this.product = product;
+        this.store = store;
+        this.price = price;
+        this.restock = restock;
+    }
 
 }

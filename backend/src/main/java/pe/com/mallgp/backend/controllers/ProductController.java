@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Mall;
-
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
@@ -60,7 +59,6 @@ public class ProductController {
         }
         productRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
     @GetMapping("/products/{id}")
@@ -68,7 +66,6 @@ public class ProductController {
         Product product=productRepository.findById(id).get();
         product.setOffers(null);
         return new ResponseEntity<Product>(product,HttpStatus.OK);
-
     }
 
     @PutMapping("/products/{id}")
