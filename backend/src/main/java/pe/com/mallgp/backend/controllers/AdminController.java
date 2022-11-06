@@ -7,11 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Admin;
 
-import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.entities.Product;
-
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
-
 import pe.com.mallgp.backend.repositories.AdminRepository;
 
 import java.util.List;
@@ -38,8 +35,6 @@ public class AdminController {
         return new ResponseEntity<Admin>(newAdmin, HttpStatus.CREATED);
     }
 
-    // http://localhost:8080/api/admins/4/forced/1
-
     @DeleteMapping("/admins/{id}/forced/{forced}")
     public ResponseEntity<HttpStatus> deleteAdminByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
 
@@ -50,7 +45,6 @@ public class AdminController {
         }
         adminRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
     @GetMapping("/admins/{id}")
@@ -71,4 +65,5 @@ public class AdminController {
         updateAdmin.setStoreMall(null);
         return new ResponseEntity<Admin>(updateAdmin, HttpStatus.OK);
     }
+
 }
