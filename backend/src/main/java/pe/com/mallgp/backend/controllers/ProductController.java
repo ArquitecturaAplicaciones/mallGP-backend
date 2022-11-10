@@ -10,9 +10,11 @@ import pe.com.mallgp.backend.entities.Product;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.repositories.ProductRepository;
+import pe.com.mallgp.backend.services.ProductService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class ProductController {
@@ -23,20 +25,22 @@ public class ProductController {
     @Autowired
     private OfferRepository offerRepository;
 
+    @Autowired
+    private ProductService productService;
+
     @GetMapping("/products")
     public ResponseEntity<List<Product>>getAllProducts(){
-        List<Product> products;
-        products=productRepository.findAll();
-        for(Product p:products){
-            p.setOffers(null);
-        }
+        List<Product> products=productService.listAll();
         return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+        //LISTO
+
     }
 
     @PostMapping("/products")
     public ResponseEntity<Product> createProduct(@RequestBody Product product){
-        Product newProduct = productRepository.save(new Product(product.getName(),product.getCategory()));
+        Product newProduct = productService.save(new Product(product.getName(),product.getCategory()));
         return new ResponseEntity<Product>(newProduct, HttpStatus.CREATED);
+        //LISTO
     }
 
     // http://localhost:8080/api/products/1
@@ -44,28 +48,24 @@ public class ProductController {
     public ResponseEntity<HttpStatus>deleteProductById(@PathVariable("id")Long id){
         productRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
     // http://localhost:8080/api/products/4/forced/1
     @DeleteMapping("/products/{id}/forced/{forced}")
     public ResponseEntity<HttpStatus> deleteProductByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {
 
-        if (forced==1) {
-            Product foundOwner = productRepository.findById(id).
-                    orElseThrow(()->new ResourceNotFoundException("Not found Product with id="+id));
-            for (Offer offer: foundOwner.getOffers()) {
-                offerRepository.deleteById(offer.getId());
-            }
-        }
-        productRepository.deleteById(id);
+        productService.delete(id, forced);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        //LISTO
     }
+
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
-        Product product=productRepository.findById(id).get();
-        product.setOffers(null);
+        Product product=productService.listById(id);
         return new ResponseEntity<Product>(product,HttpStatus.OK);
+
     }
 
     @PutMapping("/products/{id}")
