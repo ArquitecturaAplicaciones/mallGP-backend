@@ -20,7 +20,6 @@ public class Mall {
 
     @OneToMany(mappedBy = "mall")
     private List<StoreMall>storeMalls;
-    public Mall(String name){this.name=name;}
 
     @OneToMany(mappedBy = "mall")
     private List<New>news;

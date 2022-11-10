@@ -21,7 +21,9 @@ public class BackendApplication {
 		NewRepository newRepository,
 		OfferRepository offerRepository,
 		ProductRepository productRepository,
-		StoreRepository storeRepository
+		StoreRepository storeRepository,
+		ProductStoreRepository productStoreRepository,
+		StoreMallRepository storeMallRepository
 		){
 		return args->{
 			//admins
@@ -62,20 +64,30 @@ public class BackendApplication {
 			productRepository.save(product2);
 
 			//stores
-			Store store=new Store("Addidas","Calzado");
+			Store store=new Store("addidas","calzado");
 			storeRepository.save(store);
 
-			Store store1=new Store("Pizza Vegana","Alimento");
+			Store store1=new Store("pizza_vegana","alimento");
 			storeRepository.save(store1);
 
-			Store store2=new Store("Electra","Tecnologia");
+			Store store2=new Store("electra","tecnologia");
 			storeRepository.save(store2);
+
+			Store store3=new Store("reebok","calzado");
+			storeRepository.save(store3);
+
+			//ProductStore
+			ProductStore productStore1=new ProductStore(product,store,12.0,"19-11-2022");
+			productStoreRepository.save(productStore1);
 
 			//offers
 			offerRepository.save(new Offer("Oferta 1","19-11-2022","19-11-2022",store,product));
 			offerRepository.save(new Offer("Oferta 2","19-11-2022","19-11-2022",store1,product1));
 			offerRepository.save(new Offer("Oferta 3","19-11-2022","19-11-2022",store2,product2));
 
+			//StoreMall
+			StoreMall storeMall1=new StoreMall(store,mall,120,admin);
+			storeMallRepository.save(storeMall1);
 		};
 	}
 

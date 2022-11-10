@@ -23,7 +23,7 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<StoreMall> storeMalls;
 
-    public Store(String name){this.name=name;}
+
 
     @OneToMany(mappedBy = "store")
     private List<ProductStore> productStores;
