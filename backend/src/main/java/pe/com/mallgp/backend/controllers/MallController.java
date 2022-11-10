@@ -14,6 +14,7 @@ import pe.com.mallgp.backend.repositories.StoreRepository;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class MallController {

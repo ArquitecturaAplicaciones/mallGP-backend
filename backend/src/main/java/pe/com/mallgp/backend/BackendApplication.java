@@ -53,23 +53,23 @@ public class BackendApplication {
 			newRepository.save(new New("Novedad 5", "19-11-2022", "19-11-2022", mall2));
 
 			//products
-			Product product=new Product("Zapatilla","Calzado");
+			Product product=new Product("Zapatilla","calzado");
 			productRepository.save(product);
 
-			Product product1=new Product("Pizza","Alimento");
+			Product product1=new Product("Pizza","alimento");
 			productRepository.save(product1);
 
-			Product product2=new Product("Televidor","Tecnologia");
+			Product product2=new Product("Televidor","tecnologia");
 			productRepository.save(product2);
 
 			//stores
-			Store store=new Store("Addidas","Calzado");
+			Store store=new Store("Addidas","calzado");
 			storeRepository.save(store);
 
-			Store store1=new Store("Pizza Vegana","Alimento");
+			Store store1=new Store("Pizza Vegana","alimento");
 			storeRepository.save(store1);
 
-			Store store2=new Store("Electra","Tecnologia");
+			Store store2=new Store("Electra","tecnologia");
 			storeRepository.save(store2);
 
 			//ProductStore

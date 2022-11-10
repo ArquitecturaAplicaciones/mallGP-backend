@@ -11,6 +11,7 @@ import pe.com.mallgp.backend.repositories.StoreRepository;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class StoreController {
@@ -87,10 +88,10 @@ public class StoreController {
 
 
     @GetMapping("/stores/category/{category}")
-    public ResponseEntity<List<Store>> getStoreByCategory(@PathVariable("category")String category){
+    public ResponseEntity<List<Store>> getStoreByCategory(@PathVariable("category") String category){
 
         List<Store>stores;
-        stores=storeRepository.findByCategory("category");
+        stores=storeRepository.findByCategory(category);
         for (Store s:stores){
             s.setOffers(null);
             s.setProductStores(null);
@@ -99,6 +100,7 @@ public class StoreController {
         return new ResponseEntity<List<Store>>(stores,HttpStatus.OK);
 
     }
+
 
 
 
@@ -113,5 +115,14 @@ public class StoreController {
         Store updateStore=storeRepository.save(foundStore);
         updateStore.setOffers(null);
         return new ResponseEntity<Store>(updateStore, HttpStatus.OK);
+    }
+
+    @GetMapping("/stores/name/{name}")
+    public ResponseEntity<Store> getStoreByName(@PathVariable("name") String name){
+        Store store = storeRepository.findByName(name);
+        store.setStoreMalls(null);
+        store.setProductStores(null);
+        store.setOffers(null);
+        return new ResponseEntity<Store>(store,HttpStatus.OK);
     }
 }

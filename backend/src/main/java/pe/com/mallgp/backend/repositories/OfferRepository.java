@@ -9,6 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface OfferRepository extends JpaRepository<Offer, Long> {
-    List<Offer>findByStore(Store store);
-    List<Offer>findByProduct(Product product);
+    List<Offer>findByStore(String store);
+    List<Offer>findByProduct(String product);
 }

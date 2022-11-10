@@ -13,6 +13,7 @@ import pe.com.mallgp.backend.repositories.AdminRepository;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api")
 public class AdminController {
@@ -64,6 +65,13 @@ public class AdminController {
         Admin updateAdmin = adminRepository.save(foundAdmin);
         updateAdmin.setStoreMall(null);
         return new ResponseEntity<Admin>(updateAdmin, HttpStatus.OK);
+    }
+
+    @GetMapping("/admins/name/{name}")
+    public ResponseEntity<Admin> getOwnerByName(@PathVariable("name") String name){
+        Admin admin = adminRepository.findByName(name);
+        admin.setStoreMall(null);
+        return new ResponseEntity<Admin>(admin,HttpStatus.OK);
     }
 
 }

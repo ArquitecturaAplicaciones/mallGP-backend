@@ -1,0 +1,37 @@
+package pe.com.mallgp.backend.servicesImpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import pe.com.mallgp.backend.entities.ProductStore;
+import pe.com.mallgp.backend.repositories.ProductStoreRepository;
+import pe.com.mallgp.backend.services.ProductStoreService;
+
+import java.util.List;
+@Service
+public class ProductStoreServiceImpl implements ProductStoreService {
+    @Autowired
+    ProductStoreRepository productStoreRepository;
+
+    public List<ProductStore> listAll(){
+        List<ProductStore> productStores;
+        productStores = productStoreRepository.findAll();
+        return productStores;
+    }
+
+    public ProductStore listById(Long id){
+        ProductStore productStore;
+        productStore=productStoreRepository.findById(id).get();
+
+        return productStore;
+    }
+
+    public void delete(Long id){
+
+        ProductStore productStore = productStoreRepository.findById(id).get();
+
+        productStoreRepository.deleteById(productStore.getId());
+
+    }
+}
