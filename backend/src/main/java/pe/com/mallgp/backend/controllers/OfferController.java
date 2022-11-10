@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
-import pe.com.mallgp.backend.entities.Store;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.services.OfferService;
@@ -17,8 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class OfferController {
-    @Autowired
-    private OfferRepository offerRepository;
 
     @Autowired
     private OfferService offerService;
@@ -55,13 +52,14 @@ public class OfferController {
     }
 
     // http://localhost:8080/api/offers/1
+    /*
     @DeleteMapping("/offers/{id}")
     public ResponseEntity<HttpStatus>deleteOfferById(@PathVariable("id")Long id){
         offerRepository.deleteById(id);
 
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    }*/
 
     // http://localhost:8080/api/offers/4/forced/1
     @DeleteMapping("/offers/{id}/forced/{forced}")
@@ -80,29 +78,27 @@ public class OfferController {
 
     @GetMapping("/offers/{id}")
     public ResponseEntity<Offer> getOfferById(@PathVariable("id") Long id){
-        Offer offer=offerService.listById(id);
+        Offer offer=offerService.findById(id);
         return new ResponseEntity<Offer>(offer, HttpStatus.OK);
         //LISTO
     }
 
     @PutMapping("/offers/{id}")
     public ResponseEntity<Offer> updateOffer(@PathVariable("id")Long id, @RequestBody Offer offer){
-        Offer foundOffer=offerRepository.findById(id).get();
-        if(offer.getName()!=null)
-        foundOffer.setName(offer.getName());
+        Offer foundOffer=offerService.findById(id);
+        /*if(offer.getName()!=null)
+            foundOffer.setName(offer.getName());
         if(offer.getDate_on()!=null)
-        foundOffer.setDate_on(offer.getDate_on());
+            foundOffer.setDate_on(offer.getDate_on());
         if(offer.getDate_of()!=null)
-        foundOffer.setDate_of(offer.getDate_of());
+            foundOffer.setDate_of(offer.getDate_of());
         if(offer.getStore()!=null)
-        foundOffer.setStore(offer.getStore());
+            foundOffer.setStore(offer.getStore());
         if(offer.getProduct()!=null)
-        foundOffer.setProduct(offer.getProduct());
-        Offer updateOffer=offerRepository.save(foundOffer);
-        updateOffer.setStore(null);
-        updateOffer.setProduct(null);
+            foundOffer.setProduct(offer.getProduct());*/
+        Offer updateOffer=offerService.save(foundOffer);
+        /*updateOffer.setStore(null);
+        updateOffer.setProduct(null);*/
         return new ResponseEntity<Offer>(updateOffer,HttpStatus.OK);
     }
-
-
 }

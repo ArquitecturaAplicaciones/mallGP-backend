@@ -26,9 +26,7 @@ public class ProductStore {
 
     private Double price;
 
-
     private String restock;
-
 
     public ProductStore(Product product, Store store, Double price, String restock) {
         this.product = product;
@@ -36,5 +34,4 @@ public class ProductStore {
         this.price = price;
         this.restock = restock;
     }
-
 }

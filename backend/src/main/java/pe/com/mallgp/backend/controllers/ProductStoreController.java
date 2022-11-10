@@ -4,12 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import pe.com.mallgp.backend.entities.Offer;
-import pe.com.mallgp.backend.entities.Product;
 import pe.com.mallgp.backend.entities.ProductStore;
-import pe.com.mallgp.backend.entities.Store;
-import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.ProductRepository;
 import pe.com.mallgp.backend.repositories.ProductStoreRepository;
 import pe.com.mallgp.backend.repositories.StoreRepository;
@@ -21,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ProductStoreController {
+
     @Autowired
     private ProductStoreRepository productStoreRepository;
 
@@ -83,6 +79,5 @@ public class ProductStoreController {
         productStoreService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }

@@ -6,6 +6,5 @@ import pe.com.mallgp.backend.entities.Admin;
 import java.util.List;
 
 public interface AdminRepository extends JpaRepository <Admin, Long> {
-
-    Admin findByName(String name);
+    List<Admin> findByName(String name);
 }

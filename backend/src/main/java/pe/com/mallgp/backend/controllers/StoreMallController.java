@@ -4,9 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.com.mallgp.backend.entities.Admin;
-import pe.com.mallgp.backend.entities.Mall;
-import pe.com.mallgp.backend.entities.Store;
 import pe.com.mallgp.backend.entities.StoreMall;
 import pe.com.mallgp.backend.repositories.AdminRepository;
 import pe.com.mallgp.backend.repositories.MallRepository;
@@ -16,6 +13,9 @@ import pe.com.mallgp.backend.services.StoreMallService;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
+@RestController
+@RequestMapping("/api")
 public class StoreMallController {
 
     @Autowired
@@ -87,6 +87,4 @@ public class StoreMallController {
         storeMallService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-
 }

@@ -19,11 +19,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class ProductController {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private OfferRepository offerRepository;
 
     @Autowired
     private ProductService productService;
@@ -44,12 +39,13 @@ public class ProductController {
     }
 
     // http://localhost:8080/api/products/1
+    /*
     @DeleteMapping("/products/{id}")
     public ResponseEntity<HttpStatus>deleteProductById(@PathVariable("id")Long id){
         productRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-    }
+    }*/
 
     // http://localhost:8080/api/products/4/forced/1
     @DeleteMapping("/products/{id}/forced/{forced}")
@@ -63,18 +59,18 @@ public class ProductController {
 
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
-        Product product=productService.listById(id);
+        Product product=productService.findById(id);
         return new ResponseEntity<Product>(product,HttpStatus.OK);
 
     }
 
     @PutMapping("/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable("id")Long id, @RequestBody Product product){
-        Product foundProduct=productRepository.findById(id).get();
-        foundProduct.setName(product.getName());
-        foundProduct.setCategory(product.getCategory());
-        Product updateProduct=productRepository.save(foundProduct);
-        updateProduct.setOffers(null);
+        Product foundProduct=productService.findById(id);
+        /*foundProduct.setName(product.getName());
+        foundProduct.setCategory(product.getCategory());*/
+        Product updateProduct=productService.save(foundProduct);
+        //updateProduct.setOffers(null);
         return new ResponseEntity<Product>(updateProduct,HttpStatus.OK);
     }
 }

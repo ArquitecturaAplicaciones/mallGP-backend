@@ -14,12 +14,13 @@ public class StoreMall {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @ManyToOne
-    @JoinColumn(name="store_id")
+    @ManyToOne /*Se incluye el id del Store*/
+    @JoinColumn(name="store_id", referencedColumnName = "id")
     private Store store;
 
-    @ManyToOne
-    @JoinColumn(name="mall_id")
+
+    @ManyToOne /*Se incluye el id del Mall*/
+    @JoinColumn(name="mall_id", referencedColumnName = "id")
     private Mall mall;
 
     private Integer capacity;
@@ -28,4 +29,12 @@ public class StoreMall {
     @JoinColumn(name="admin_id")
     private Admin admin;
 
+
+
+    public StoreMall(Store store, Mall mall, Integer capacity, Admin admin) {
+        this.store = store;
+        this.mall = mall;
+        this.capacity = capacity;
+        this.admin = admin;
+    }
 }
