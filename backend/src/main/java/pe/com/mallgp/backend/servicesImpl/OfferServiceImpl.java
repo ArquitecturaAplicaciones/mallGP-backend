@@ -1,9 +1,8 @@
-package pe.com.mallgp.backend.servicesImpl;
+package pe.com.mallgp.backend.servicesimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pe.com.mallgp.backend.entities.Admin;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
 import pe.com.mallgp.backend.repositories.OfferRepository;
@@ -45,11 +44,28 @@ public class OfferServiceImpl implements OfferService {
         offerRepository.deleteById(id);
     }
 
-    public Offer listById(Long id){
+    public Offer findById(Long id){
         Offer offer=offerRepository.findById(id).get();
         offer.setStore(null);
         offer.setProduct(null);
         return offer;
     }
 
+    public Offer update(Long id, Offer offer){
+        Offer foundOffer=offerRepository.findById(id).get();
+        if(offer.getName()!=null)
+            foundOffer.setName(offer.getName());
+        if(offer.getDate_on()!=null)
+            foundOffer.setDate_on(offer.getDate_on());
+        if(offer.getDate_of()!=null)
+            foundOffer.setDate_of(offer.getDate_of());
+        if(offer.getStore()!=null)
+            foundOffer.setStore(offer.getStore());
+        if(offer.getProduct()!=null)
+            foundOffer.setProduct(offer.getProduct());
+        Offer updateOffer=offerRepository.save(foundOffer);
+        updateOffer.setStore(null);
+        updateOffer.setProduct(null);
+        return updateOffer;
+    }
 }
