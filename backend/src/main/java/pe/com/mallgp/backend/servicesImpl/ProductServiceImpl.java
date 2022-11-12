@@ -1,8 +1,6 @@
-package pe.com.mallgp.backend.servicesImpl;
+package pe.com.mallgp.backend.servicesimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pe.com.mallgp.backend.entities.Offer;
 import pe.com.mallgp.backend.entities.Product;
@@ -16,7 +14,6 @@ import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
-
     @Autowired
     ProductRepository productRepository;
 
@@ -49,9 +46,20 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(id);
     }
 
-    public Product listById(Long id){
+    public Product findById(Long id){
         Product product=productRepository.findById(id).get();
         product.setOffers(null);
         return product;
     }
+
+    @Transactional
+    public Product update(Long id, Product product){
+        Product foundProduct=productRepository.findById(id).get();
+        foundProduct.setName(product.getName());
+        foundProduct.setCategory(product.getCategory());
+        Product updateProduct=productRepository.save(foundProduct);
+        updateProduct.setOffers(null);
+        return updateProduct;
+    }
+
 }

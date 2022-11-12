@@ -1,14 +1,13 @@
-package pe.com.mallgp.backend.servicesImpl;
+package pe.com.mallgp.backend.servicesimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pe.com.mallgp.backend.entities.ProductStore;
 import pe.com.mallgp.backend.repositories.ProductStoreRepository;
 import pe.com.mallgp.backend.services.ProductStoreService;
 
 import java.util.List;
+
 @Service
 public class ProductStoreServiceImpl implements ProductStoreService {
     @Autowired

@@ -23,7 +23,8 @@ public class BackendApplication {
 		ProductRepository productRepository,
 		StoreRepository storeRepository,
 		ProductStoreRepository productStoreRepository,
-		StoreMallRepository storeMallRepository
+		StoreMallRepository storeMallRepository,
+		SuggestionRepository suggestionRepository
 		){
 		return args->{
 			//admins
@@ -88,6 +89,10 @@ public class BackendApplication {
 			//StoreMall
 			StoreMall storeMall1=new StoreMall(store,mall,120,admin);
 			storeMallRepository.save(storeMall1);
+
+			//Suggestion
+			Suggestion suggestion1=new Suggestion("Pablo","Ponganle juegos >:0", "19-11-2022");
+			suggestionRepository.save(suggestion1);
 		};
 	}
 

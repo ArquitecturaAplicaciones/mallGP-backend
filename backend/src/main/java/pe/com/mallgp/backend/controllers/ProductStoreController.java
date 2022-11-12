@@ -17,14 +17,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class ProductStoreController {
 
-    @Autowired
-    private ProductStoreRepository productStoreRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private StoreRepository storeRepository;
 
     @Autowired
     private ProductStoreService productStoreService;

@@ -18,17 +18,6 @@ import java.util.List;
 @RequestMapping("/api")
 public class StoreMallController {
 
-    @Autowired
-    private StoreMallRepository storeMallRepository;
-
-    @Autowired
-    private StoreRepository storeRepository;
-
-    @Autowired
-    private MallRepository mallRepository;
-
-    @Autowired
-    private AdminRepository adminRepository;
 
     @Autowired
     private StoreMallService storeMallService;
