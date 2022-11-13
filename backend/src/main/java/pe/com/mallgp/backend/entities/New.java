@@ -21,7 +21,7 @@ public class New {
     private String date_on;
     private String date_of;
 
-    @ManyToOne/*(fetch = FetchType.LAZY, optional = false)*/
+    @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name = "mall_id", nullable = false)
     private Mall mall;
 

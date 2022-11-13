@@ -34,7 +34,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     public Store save(Store store){
-        Store newStore = storeRepository.save(new Store(store.getName(),store.getCategory()));
+        Store newStore = storeRepository.save(new Store(store.getName(),store.getCategory(),store.getHorario(),store.getUbicacion(),store.getImg()));
         return newStore;
     }
 

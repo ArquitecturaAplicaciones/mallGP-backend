@@ -53,7 +53,7 @@ public class StoreController {
 
     @PostMapping("/stores")
     public ResponseEntity<Store> createStore(@RequestBody Store store){
-        Store newStore = storeService.save(new Store(store.getName(),store.getCategory()));
+        Store newStore = storeService.save(new Store(store.getName(),store.getCategory(),store.getHorario(),store.getUbicacion(),store.getImg()));
         return new ResponseEntity<Store>(newStore, HttpStatus.CREATED);
     }
     //hecho
