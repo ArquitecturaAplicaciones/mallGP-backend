@@ -20,6 +20,12 @@ public class Store {
 
     public String category;
 
+    public String horario;
+
+    public String ubicacion;
+
+    public String img;
+
     @OneToMany(mappedBy = "store")
     private List<StoreMall> storeMalls;
 
@@ -32,8 +38,12 @@ public class Store {
     @OneToMany(mappedBy = "store")
     private List<Offer>offers;
 
-    public Store(String name, String category) {
+
+    public Store(String name, String category, String horario, String ubicacion, String img) {
         this.name = name;
         this.category = category;
+        this.horario = horario;
+        this.ubicacion = ubicacion;
+        this.img = img;
     }
 }
