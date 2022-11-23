@@ -9,9 +9,12 @@ import pe.com.mallgp.backend.entities.Admin;
 
 import pe.com.mallgp.backend.entities.Product;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+import pe.com.mallgp.backend.exporters.AdminExporterExcel;
 import pe.com.mallgp.backend.repositories.AdminRepository;
 import pe.com.mallgp.backend.services.AdminService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -35,6 +38,20 @@ public class AdminController {
         return new ResponseEntity<List<Admin>>(admins, HttpStatus.OK);*/
     }
     //hecho
+
+    @GetMapping("/admins/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+        String headerValue="attachment; filename=admin_report";
+
+        response.setHeader(headerKey,headerValue);
+        List<Admin>admins;
+        admins=adminService.listAll();
+
+        AdminExporterExcel exporterExcel = new AdminExporterExcel(admins);
+        exporterExcel.export(response);
+    }
 
     @PostMapping("/admins")
     public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin){

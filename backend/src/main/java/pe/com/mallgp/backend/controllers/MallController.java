@@ -7,12 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.*;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+import pe.com.mallgp.backend.exporters.MallExporterExcel;
 import pe.com.mallgp.backend.repositories.AdminRepository;
 import pe.com.mallgp.backend.repositories.MallRepository;
 import pe.com.mallgp.backend.repositories.NewRepository;
 import pe.com.mallgp.backend.repositories.StoreRepository;
 import pe.com.mallgp.backend.services.MallService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -36,36 +39,27 @@ public class MallController {
         }*/
         return new ResponseEntity<List<Mall>>(malls, HttpStatus.OK);
     }//hecho
-/*
-    @GetMapping("/mall_new")
-    public ResponseEntity<List<Mall>>getAllMallAndNew(){
+
+    @GetMapping("/malls/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException{
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+        String headerValue="attachment; filename=mall_report";
+
+        response.setHeader(headerKey,headerValue);
         List<Mall>malls;
-        malls=mallRepository.findAll();
-        for (Mall m:malls){
-            for (New n:m.getNews()){
-                n.setMall(null);
-            }
-        }
-        return new ResponseEntity<List<Mall>>(malls, HttpStatus.OK);
-    }*/
-/*
-    @GetMapping("/mall_stores")
-    public ResponseEntity<List<Mall>>getAllMallAndStores(){
-        List<Mall>malls;
-        malls=mallRepository.findAll();
-        for (Mall m: malls) {
-            for (StoreMall s: m.getStoreMalls()) {
-                s.getStore().setName(null);
-            }
-        }
-        return new ResponseEntity<List<Mall>>(malls, HttpStatus.OK);
-    }*/
+        malls=mallService.listAll();
+
+        MallExporterExcel exporterExcel=new MallExporterExcel(malls);
+        exporterExcel.export(response);
+    }
+
 
 
     //http://localhost:8080/api/malls
     @PostMapping("/malls")
     public ResponseEntity<Mall> createMall(@RequestBody Mall mall){
-        Mall newMall = mallService.save(new Mall(mall.getName(),mall.getLocation()));
+        Mall newMall = mallService.save(new Mall(mall.getName(), mall.getDirection(), mall.getLocation(), mall.getImg()));
         return new ResponseEntity<Mall>(newMall, HttpStatus.CREATED);
     }//hecho
 
@@ -84,7 +78,7 @@ public class MallController {
         if(mall.getLocation()!=null)
         foundMall.setLocation(mall.getLocation());*/
         Mall updateMall=mallService.save(foundMall);
-      //  updateMall.setNews(null);
+        //  updateMall.setNews(null);
         return new ResponseEntity<Mall>(updateMall,HttpStatus.OK);
     }//hecho
 

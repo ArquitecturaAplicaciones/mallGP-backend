@@ -16,7 +16,11 @@ public class Mall {
     private Long id;
 
     public String name;
+
+    public String direction;
     public String location;
+
+    public String img;
 
     @OneToMany(mappedBy = "mall")
     private List<StoreMall>storeMalls;
@@ -25,8 +29,10 @@ public class Mall {
     private List<New>news;
 
 
-    public Mall(String name, String location) {
+    public Mall(String name, String location, String direction, String img) {
         this.name = name;
+        this.direction = direction;
         this.location = location;
+        this.img = img;
     }
 }

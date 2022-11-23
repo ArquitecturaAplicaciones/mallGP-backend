@@ -17,12 +17,20 @@ public class StoreMallServiceImpl implements StoreMallService {
 
         List<StoreMall> storeMalls;
         storeMalls= storeMallRepository.findAll();
+        for(StoreMall s:storeMalls){
+            s.setStore(null);
+            s.setMall(null);
+            s.setAdmin(null);
+        }
         return storeMalls;
     }
 
     public StoreMall listById(Long id){
         StoreMall storeMall;
         storeMall=storeMallRepository.findById(id).get();
+        storeMall.setStore(null);
+        storeMall.setMall(null);
+        storeMall.setAdmin(null);
         return storeMall;
     }
 

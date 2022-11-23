@@ -30,7 +30,10 @@ public class OfferServiceImpl implements OfferService {
 
     @Transactional
     public Offer save(Offer offer){
-        Offer newOffer = offerRepository.save(new Offer(offer.getName(),offer.getDate_on(),offer.getDate_of(),offer.getStore(),offer.getProduct()));
+        Offer newOffer = offerRepository.save(new Offer(offer.getName(),
+                offer.getName_product(),offer.getGender_product(),
+                offer.getPrice_s_desc(),offer.getPrice_c_desc(),offer.getDate_on(), offer.getDate_of(),
+                offer.getImg(),offer.getStore(),offer.getProduct()));
         return newOffer;
     }
 
@@ -55,10 +58,20 @@ public class OfferServiceImpl implements OfferService {
         Offer foundOffer=offerRepository.findById(id).get();
         if(offer.getName()!=null)
             foundOffer.setName(offer.getName());
+        if(offer.getName_product()!=null)
+            foundOffer.setName_product(offer.getName_product());
+        if(offer.getGender_product()!=null)
+            foundOffer.setGender_product(offer.getGender_product());
+        if(offer.getPrice_s_desc()!=null)
+            foundOffer.setPrice_s_desc(offer.getPrice_s_desc());
+        if(offer.getPrice_c_desc()!=null)
+            foundOffer.setPrice_c_desc(offer.getPrice_c_desc());
         if(offer.getDate_on()!=null)
             foundOffer.setDate_on(offer.getDate_on());
         if(offer.getDate_of()!=null)
             foundOffer.setDate_of(offer.getDate_of());
+        if(offer.getImg()!=null)
+            foundOffer.setImg(offer.getImg());
         if(offer.getStore()!=null)
             foundOffer.setStore(offer.getStore());
         if(offer.getProduct()!=null)

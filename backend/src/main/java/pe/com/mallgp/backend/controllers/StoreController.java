@@ -6,10 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.*;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+import pe.com.mallgp.backend.exporters.StoreExporterExcel;
+import pe.com.mallgp.backend.exporters.StoreMallExporterExcel;
 import pe.com.mallgp.backend.repositories.OfferRepository;
 import pe.com.mallgp.backend.repositories.StoreRepository;
 import pe.com.mallgp.backend.services.StoreService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -22,6 +26,9 @@ public class StoreController {
 
     @Autowired
     private OfferRepository offerRepository;
+
+    @Autowired
+    private StoreRepository storeRepository;
 
     @GetMapping("/stores")
     public ResponseEntity<List<Store>> getAllStore(){
@@ -38,18 +45,19 @@ public class StoreController {
     }
     //hecho
 
-    /*
-    @GetMapping("/stores_products")
-    public ResponseEntity<List<Store>> getAllStoreAndProducts(){
+    @GetMapping("/stores/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException{
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+        String headerValue="attachment; filename=store_report";
+
+        response.setHeader(headerKey,headerValue);
         List<Store>stores;
-        stores=storeRepository.findAll();
-        for (Store s:stores){
-            for (ProductStore p:s.getProductStores()){
-                p.getProduct().setName(null);
-            }
-        }
-        return new ResponseEntity<List<Store>>(stores, HttpStatus.OK);
-    }*/
+        stores=storeService.listAll();
+
+        StoreExporterExcel exporterExcel=new StoreExporterExcel(stores);
+        exporterExcel.export(response);
+    }
 
     @PostMapping("/stores")
     public ResponseEntity<Store> createStore(@RequestBody Store store){
@@ -60,11 +68,11 @@ public class StoreController {
 
 
     // http://localhost:8080/api/products/1
-    /*@DeleteMapping("/stores/{id}")
+    @DeleteMapping("/stores/{id}")
     public ResponseEntity<HttpStatus>deleteStoreById(@PathVariable("id")Long id){
         storeRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }*/
+    }
 
     // http://localhost:8080/api/products/4/forced/1
     @DeleteMapping("/stores/{id}/forced/{forced}")
@@ -118,14 +126,20 @@ public class StoreController {
 
     @PutMapping("/stores/{id}")
     public ResponseEntity<Store>updateStore(@PathVariable("id") Long id, @RequestBody Store store){
-        Store foundStore=storeService.findById(id);
-       /* if(store.getName()!=null)
-        foundStore.setName(store.getName());
+        Store foundStore=storeRepository.findById(id).orElseThrow();
+        if(store.getName()!=null)
+            foundStore.setName(store.getName());
         if(store.getCategory()!=null)
-        foundStore.setCategory(store.getCategory());*/
-        Store updateStore=storeService.save(foundStore);
-        //updateStore.setOffers(null);
+            foundStore.setCategory(store.getCategory());
+        if(store.getHorario()!=null)
+            foundStore.setHorario(store.getHorario());
+        if(store.getUbicacion()!=null)
+            foundStore.setUbicacion(store.getUbicacion());
+        if(store.getImg()!=null)
+            foundStore.setImg(store.getImg());
+
+        Store updateStore=storeRepository.save(foundStore);
+        updateStore.setOffers(null);
         return new ResponseEntity<Store>(updateStore, HttpStatus.OK);
     }
-    //hecho
 }
