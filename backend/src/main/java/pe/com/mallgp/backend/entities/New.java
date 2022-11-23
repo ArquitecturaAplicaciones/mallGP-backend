@@ -22,7 +22,7 @@ public class New {
     private String date_of;
 
     @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name = "mall_id", nullable = false)
+    @JoinColumn(name = "mall_id")
     private Mall mall;
 
 

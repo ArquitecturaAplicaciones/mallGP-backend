@@ -5,11 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.ProductStore;
+import pe.com.mallgp.backend.exporters.ProductExporterExcel;
+import pe.com.mallgp.backend.exporters.ProductStoreExporterExcel;
 import pe.com.mallgp.backend.repositories.ProductRepository;
 import pe.com.mallgp.backend.repositories.ProductStoreRepository;
 import pe.com.mallgp.backend.repositories.StoreRepository;
 import pe.com.mallgp.backend.services.ProductStoreService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -28,6 +32,20 @@ public class ProductStoreController {
         List<ProductStore> productStores = productStoreService.listAll();
         return new ResponseEntity<>(productStores, HttpStatus.OK);
         //LISTO
+    }
+
+    @GetMapping("/product/stores/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException{
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+        String headerValue="attachment; filename=product_store_report";
+
+        response.setHeader(headerKey,headerValue);
+        List<ProductStore>productStores;
+        productStores=productStoreService.listAll();
+
+        ProductStoreExporterExcel exporterExcel=new ProductStoreExporterExcel(productStores);
+        exporterExcel.export(response);
     }
 
     @GetMapping("/product/stores/{id}")

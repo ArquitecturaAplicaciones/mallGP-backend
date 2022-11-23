@@ -53,6 +53,8 @@ public class StoreServiceImpl implements StoreService {
     public Store findById(Long id){
         Store store=storeRepository.findById(id).get();
         store.setOffers(null);
+        store.setProductStores(null);
+        store.setStoreMalls(null);
         return store;
     }
 

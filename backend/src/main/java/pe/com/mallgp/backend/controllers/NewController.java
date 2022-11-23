@@ -6,9 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pe.com.mallgp.backend.entities.New;
 import pe.com.mallgp.backend.exceptions.ResourceNotFoundException;
+import pe.com.mallgp.backend.exporters.MallExporterExcel;
+import pe.com.mallgp.backend.exporters.NewExporterExcel;
 import pe.com.mallgp.backend.repositories.NewRepository;
 import pe.com.mallgp.backend.services.NewService;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,6 +22,9 @@ public class NewController {
 
     @Autowired
     private NewService newService;
+
+    @Autowired
+    private NewRepository newRepository;
 
     @GetMapping("/news")
     public ResponseEntity<List<New>> getAllNews(){
@@ -31,6 +38,18 @@ public class NewController {
     }
     //hecho
 
+    @GetMapping("/news/export/excel")
+    public void exportToExcel(HttpServletResponse response)throws IOException{
+        response.setContentType("application/octet-stream");
+        String headerKey="Content-Disposition";
+        String headerValue="attachment; filename=new_report";
+
+        response.setHeader(headerKey, headerValue);
+        List<New>news;
+        news=newService.listAll();
+        NewExporterExcel exporterExcel=new NewExporterExcel(news);
+        exporterExcel.export(response);
+    }
 
 
     @PostMapping("/news")
@@ -40,7 +59,7 @@ public class NewController {
     }//hecho
 
     // http://localhost:8080/api/news/1
-    /*
+
     @DeleteMapping("/news/{id}")
     public ResponseEntity<HttpStatus>deleteNewById(@PathVariable("id")Long id){
         newRepository.deleteById(id);
@@ -48,7 +67,7 @@ public class NewController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-*/
+
     // http://localhost:8080/api/news/4/forced/1
     @DeleteMapping("/news/{id}/forced/{forced}")
     public ResponseEntity<HttpStatus> deleteNewByIdForced(@PathVariable("id") Long id, @PathVariable("forced") int forced) {

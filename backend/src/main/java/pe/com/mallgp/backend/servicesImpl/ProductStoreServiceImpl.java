@@ -16,13 +16,18 @@ public class ProductStoreServiceImpl implements ProductStoreService {
     public List<ProductStore> listAll(){
         List<ProductStore> productStores;
         productStores = productStoreRepository.findAll();
+        for(ProductStore p:productStores){
+            p.setProduct(null);
+            p.setStore(null);
+        }
         return productStores;
     }
 
     public ProductStore listById(Long id){
         ProductStore productStore;
         productStore=productStoreRepository.findById(id).get();
-
+        productStore.setStore(null);
+        productStore.setProduct(null);
         return productStore;
     }
 

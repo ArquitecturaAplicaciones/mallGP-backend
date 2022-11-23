@@ -28,13 +28,14 @@ public class MallServiceImpl implements MallService {
         malls=mallRepository.findAll();
         for (Mall m:malls){
             m.setNews(null);
+            m.setStoreMalls(null);
         }
         return malls;
     }
 
     @Transactional
     public Mall save(Mall mall){
-        Mall newMall = mallRepository.save(new Mall(mall.getName(),mall.getLocation()));
+        Mall newMall = mallRepository.save(new Mall(mall.getName(), mall.getDirection(), mall.getLocation(), mall.getImg()));
         return  newMall;
     }
 
@@ -54,6 +55,7 @@ public class MallServiceImpl implements MallService {
     public Mall findById(Long id){
         Mall mall=mallRepository.findById(id).get();
         mall.setNews(null);
+        mall.setStoreMalls(null);
         return mall;
     }
 
@@ -62,8 +64,12 @@ public class MallServiceImpl implements MallService {
         Mall foundMall=mallRepository.findById(id).get();
         if(mall.getName()!=null)
             foundMall.setName(mall.getName());
+        if(mall.getDirection()!=null)
+            foundMall.setDirection(mall.getDirection());
         if(mall.getLocation()!=null)
             foundMall.setLocation(mall.getLocation());
+        if(mall.getImg()!=null)
+            foundMall.setImg(mall.getImg());
         Mall updateMall=mallRepository.save(foundMall);
         updateMall.setNews(null);
         return updateMall;

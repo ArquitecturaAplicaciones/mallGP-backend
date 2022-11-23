@@ -18,6 +18,14 @@ public class Product {
     public String name;
     public String category;
 
+    public String description;
+
+    public String price;
+
+    public String gender;
+
+    public String img;
+
     @OneToMany(mappedBy = "product")
     private List<ProductStore>productStores;
     public Product(String name){this.name=name;}
@@ -25,8 +33,12 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Offer>offers;
 
-    public Product(String name, String category) {
+    public Product(String name, String category, String description, String price, String gender, String img) {
         this.name = name;
         this.category = category;
+        this.description = description;
+        this.price = price;
+        this.gender = gender;
+        this.img = img;
     }
 }
